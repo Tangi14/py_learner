@@ -94,7 +94,11 @@ class SignupScreen extends StatelessWidget {
             Center(
               child: ElevatedButton(
                 onPressed: () {
-                  // Sign Up button functionality to be added later
+                  // Navigate to HomeScreen when "Sign Up" is pressed
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const HomeScreen()), // Updated class name
+                  );
                 },
                 style: ElevatedButton.styleFrom(
                   padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 15),
