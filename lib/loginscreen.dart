@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'home_screen.dart'; // Import the HomeScreen
 import 'signup_screen.dart'; // Import the SignupScreen
 
 class LoginScreen extends StatelessWidget {
@@ -66,11 +67,14 @@ class LoginScreen extends StatelessWidget {
             // Sign In Button
             ElevatedButton(
               onPressed: () {
-                // Add sign-in logic later
+                // Navigate to HomeScreen when "Sign In" is pressed
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const HomeScreen()),
+                );
               },
               style: ElevatedButton.styleFrom(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 60, vertical: 15),
+                padding: const EdgeInsets.symmetric(horizontal: 60, vertical: 15),
                 backgroundColor: Colors.blueAccent,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(30),
