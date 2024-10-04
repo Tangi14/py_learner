@@ -8,103 +8,181 @@ class ClassesScreen extends StatefulWidget {
 class _ClassesScreenState extends State<ClassesScreen> {
   int _currentIndex = 0;
 
-  final List<Widget> _sections = [
-    Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Text(
-          'Introduction to Classes',
-          style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.indigo),
-        ),
-        const SizedBox(height: 10),
-        const Text(
-          'Classes are a fundamental part of object-oriented programming (OOP). They allow you to define your own data types and associated functions (methods).',
-          style: TextStyle(fontSize: 16),
-        ),
-      ],
-    ),
-    Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Text(
-          'Basic Structure of a Class:',
-          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.indigo),
-        ),
-        const SizedBox(height: 10),
-        const Text(
-          'class ClassName:\n    def __init__(self, attributes):\n        # Initialize the object\n    def method(self):\n        # Define a method',
-          style: TextStyle(fontSize: 16),
-        ),
-      ],
-    ),
-    Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Text(
-          'Example in Python:',
-          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.indigo),
-        ),
-        const SizedBox(height: 10),
-        Container(
-          padding: const EdgeInsets.all(12),
-          decoration: BoxDecoration(
-            color: Colors.grey[200],
-            borderRadius: BorderRadius.circular(10),
-          ),
-          child: const Text(
-            '''# Class example in Python
-class Dog:
-    def __init__(self, name, age):
-        self.name = name
-        self.age = age
+  List<String> dragItems = ['class', 'Person {', 'String name;', 'int age;', 'Person(this.name, this.age);', '}'];
+  List<String> droppedItems = [];
 
-    def bark(self):
-        print(f"{self.name} says woof!")
-
-# Create an object of class Dog
-dog = Dog("Buddy", 3)
-dog.bark()  # Output: Buddy says woof!''',
-            style: TextStyle(fontFamily: 'monospace', fontSize: 16),
-          ),
-        ),
-      ],
-    ),
-    Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Text(
-          'Exercise: Create a Class',
-          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.indigo),
-        ),
-        const SizedBox(height: 10),
-        const Text(
-          'Write a class `Car` that has attributes like `make` and `model`, and methods that describe the car.',
-          style: TextStyle(fontSize: 16),
-        ),
-      ],
-    ),
-    Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Text(
-          'Conclusion:',
-          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.indigo),
-        ),
-        const SizedBox(height: 10),
-        const Text(
-          'Classes are the foundation of object-oriented programming, allowing you to structure your code in an organized way. Mastering classes is essential for building complex applications.',
-          style: TextStyle(fontSize: 16),
-        ),
-      ],
-    ),
-  ];
-
-  void _nextSection() {
+  void _resetQuiz() {
     setState(() {
-      if (_currentIndex < _sections.length - 1) {
-        _currentIndex++;
-      }
+      droppedItems = [];
+      dragItems = ['class', 'Person {', 'String name;', 'int age;', 'Person(this.name, this.age);', '}'];
     });
+  }
+
+  void _checkAnswer() {
+    if (droppedItems.join(' ') == 'class Person { String name; int age; Person(this.name, this.age); }') {
+      _showDialog('Correct!', 'You successfully constructed the class.');
+    } else {
+      _showDialog('Try Again', 'The pieces of code are not in the correct order.');
+    }
+  }
+
+  void _showDialog(String title, String message) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(title),
+          content: Text(message),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+                _resetQuiz();
+              },
+              child: const Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Widget _draggableBox(String text, Color color) {
+    return Container(
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: color,
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: Text(
+        text,
+        style: const TextStyle(color: Colors.white, fontSize: 16),
+      ),
+    );
+  }
+
+  List<Widget> _sections() {
+    return [
+      // Introduction
+      Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: const [
+          Text(
+            'Introduction to Classes',
+            style: TextStyle(
+              fontSize: 22,
+              fontWeight: FontWeight.bold,
+              color: Colors.indigo,
+            ),
+          ),
+          SizedBox(height: 10),
+          Text(
+            'Classes are templates for creating objects. They define properties (variables) and methods (functions).',
+            style: TextStyle(fontSize: 16),
+          ),
+        ],
+      ),
+
+      // Examples
+      Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: const [
+          Text(
+            'Example of a Class',
+            style: TextStyle(
+              fontSize: 22,
+              fontWeight: FontWeight.bold,
+              color: Colors.indigo,
+            ),
+          ),
+          SizedBox(height: 10),
+          Text(
+            'Example:\n\n'
+            '```dart\n'
+            'class Person {\n'
+            '  String name;\n'
+            '  int age;\n'
+            '  Person(this.name, this.age);\n'
+            '}\n'
+            '```',
+            style: TextStyle(fontSize: 16, fontFamily: 'monospace'),
+          ),
+        ],
+      ),
+
+      // Quiz
+      Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            'Exercise: Drag and Drop Quiz',
+            style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+              color: Colors.indigo,
+            ),
+          ),
+          const SizedBox(height: 10),
+          const Text(
+            'Drag the pieces of code to form a class definition for `Person`.',
+            style: TextStyle(fontSize: 16),
+          ),
+          const SizedBox(height: 20),
+          Wrap(
+            spacing: 10,
+            children: List.generate(dragItems.length, (index) {
+              return Draggable<String>(
+                data: dragItems[index],
+                child: _draggableBox(dragItems[index], Colors.indigo),
+                feedback: _draggableBox(
+                    dragItems[index], Colors.indigo.withOpacity(0.5)),
+                childWhenDragging: _draggableBox(dragItems[index], Colors.grey),
+              );
+            }),
+          ),
+          const SizedBox(height: 20),
+          DragTarget<String>(
+            builder: (context, candidateData, rejectedData) {
+              return Container(
+                height: 150,
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: Colors.grey[200],
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Wrap(
+                  children: droppedItems.map((item) {
+                    return Text(
+                      item,
+                      style: const TextStyle(
+                          fontFamily: 'monospace', fontSize: 16),
+                    );
+                  }).toList(),
+                ),
+              );
+            },
+            onAccept: (data) {
+              setState(() {
+                if (!droppedItems.contains(data)) {
+                  droppedItems.add(data);
+                  dragItems.remove(data);
+                }
+              });
+            },
+          ),
+          const SizedBox(height: 20),
+          ElevatedButton(
+            onPressed: _checkAnswer,
+            style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.indigo[900]),
+            child: const Text(
+              'Check Answer',
+              style: TextStyle(color: Colors.white, fontSize: 18),
+            ),
+          ),
+        ],
+      ),
+    ];
   }
 
   @override
@@ -119,14 +197,18 @@ dog.bark()  # Output: Buddy says woof!''',
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _sections[_currentIndex], // Display current section
+            _sections()[_currentIndex],
             const SizedBox(height: 20),
             Center(
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.indigo[900], // Button color
+                  backgroundColor: Colors.indigo[900],
                 ),
-                onPressed: _nextSection,
+                onPressed: () {
+                  setState(() {
+                    _currentIndex = (_currentIndex + 1) % _sections().length;
+                  });
+                },
                 child: const Text(
                   'Next',
                   style: TextStyle(fontSize: 18, color: Colors.white),
