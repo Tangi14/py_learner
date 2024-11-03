@@ -1,9 +1,61 @@
 import 'package:flutter/material.dart';
-import 'home_screen.dart'; // Import the HomeScreen
-import 'signup_screen.dart'; // Import the SignupScreen
+import 'package:py_learner/home_screen.dart'; // Import the HomeScreen
+import 'package:py_learner/signup_screen.dart'; // Import the SignupScreen
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
-class LoginScreen extends StatelessWidget {
+class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
+
+  @override
+  _LoginScreenState createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
+  // Controllers for input fields
+  final TextEditingController usernameController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
+  // Method to verify user credentials and sign in
+  Future<void> signIn() async {
+    try {
+      // Check if a user with the given username exists
+      QuerySnapshot userSnapshot = await _firestore
+          .collection('users')
+          .where('username', isEqualTo: usernameController.text.trim())
+          .get();
+
+      if (userSnapshot.docs.isNotEmpty) {
+        // Get the user's email from Firestore
+        String email = userSnapshot.docs.first['email'];
+
+        // Authenticate using Firebase Auth with email and password
+        await _auth.signInWithEmailAndPassword(
+          email: email,
+          password: passwordController.text.trim(),
+        );
+
+        // Navigate to HomeScreen if authentication is successful
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const HomeScreen()),
+        );
+      } else {
+        // Show error if username does not exist
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Username not found')),
+        );
+      }
+    } catch (e) {
+      // Display error message
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(e.toString())),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -27,6 +79,7 @@ class LoginScreen extends StatelessWidget {
 
             // Username Input Field
             TextField(
+              controller: usernameController,
               style: const TextStyle(color: Colors.white), // White text color
               decoration: InputDecoration(
                 labelText: 'Username',
@@ -46,6 +99,7 @@ class LoginScreen extends StatelessWidget {
 
             // Password Input Field
             TextField(
+              controller: passwordController,
               obscureText: true, // Hide password input
               style: const TextStyle(color: Colors.white), // White text color
               decoration: InputDecoration(
@@ -66,13 +120,7 @@ class LoginScreen extends StatelessWidget {
 
             // Sign In Button
             ElevatedButton(
-              onPressed: () {
-                // Navigate to HomeScreen when "Sign In" is pressed
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const HomeScreen()),
-                );
-              },
+              onPressed: signIn,
               style: ElevatedButton.styleFrom(
                 padding: const EdgeInsets.symmetric(horizontal: 60, vertical: 15),
                 backgroundColor: Colors.blueAccent,

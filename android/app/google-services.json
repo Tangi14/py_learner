@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "497924551481",
+    "project_id": "pylearner-6d57d",
+    "storage_bucket": "pylearner-6d57d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:497924551481:android:1b1fd271e422fda92b6ee8",
+        "android_client_info": {
+          "package_name": "com.example.py_learner"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAGMBYFaUahz9TLjOZlQ__19VkVr6JMNtk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

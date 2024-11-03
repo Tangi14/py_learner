@@ -14,18 +14,22 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-
+  sqflite: ^2.0.0+3   # Add the sqflite package
+  path: ^1.8.0        # Add path package for handling database file path
 
   
   
   cupertino_icons: ^1.0.6
+  firebase_core: ^3.4.0
+  firebase_auth: ^5.3.1
+  cloud_firestore: ^5.4.4
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
 
   
-  flutter_lints: ^3.0.0
+  flutter_lints: ^4.0.0
 
 
 

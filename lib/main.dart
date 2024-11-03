@@ -1,8 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:py_learner/splash.dart';
 import 'package:py_learner/getstarted.dart'; // Import the GetStartedScreen
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
 
-void main() {
+void main() async {
+  // Ensure Flutter widgets and services are initialized
+  WidgetsFlutterBinding.ensureInitialized();
+  
+  // Initialize Firebase
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+
   runApp(const MyApp());
 }
 
